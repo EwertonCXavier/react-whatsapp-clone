@@ -1,5 +1,3 @@
-
-
 * {
   box-sizing: border-box;
 }
@@ -7,13 +5,13 @@ html {
   font-size: 65%;
 }
 
-body{
+body {
   background-color: #d2dbdc;
   margin: 0;
-  font-family: 'Segoe UI', Helvetica Neue, Helvetica, Lucida Grande, Arial;
+  font-family: "Segoe UI", Helvetica Neue, Helvetica, Lucida Grande, Arial;
 }
 
-.app-window{
+.app-window {
   display: flex;
   height: 100vh;
   background-color: #ededed;
@@ -45,7 +43,6 @@ header {
 .header--buttons {
   display: flex;
   width: 25%;
-
 }
 
 .header--btn {
@@ -57,7 +54,6 @@ header {
   align-items: center;
   cursor: pointer;
 }
-
 
 .search {
   background-color: #f6f6f6;
@@ -71,7 +67,7 @@ header {
   border-radius: 2rem;
   display: flex;
   align-items: center;
-  padding: 0 1rem; 
+  padding: 0 1rem;
 }
 
 .search--input input {
@@ -82,13 +78,21 @@ header {
   margin-left: 1rem;
 }
 
-.contentarea {
-
-}
-
-
 .chatlist {
   flex: 1;
   background-color: #fff;
   overflow-y: auto;
+}
+
+.chatlist::-webkit-scrollbar {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.chatlist::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.contentarea {
+  flex: 1;
 }

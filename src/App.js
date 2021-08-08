@@ -8,50 +8,81 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import ChatListItem from './components/ChatListItem';
 import ChatIntro from './components/ChatIntro';
-import ChatWindow from './components/ChatWindow.js'
+import ChatWindow from './components/ChatWindow.js';
+import NewChat from './components/NewChat';
+import Login from './components/Login';
+import Api from './Api';
 
 
 export default () => {
 
-  const [chatlist, setChatList] = useState([
-    {
-      chatId: 1,
-      title: 'Fulano de tal',
-      image: 'https://image.flaticon.com/icons/png/128/168/168724.png'
-    },
-    {
-      chatId: 2,
-      title: 'Fulano de tal',
-      image: 'https://image.flaticon.com/icons/png/128/168/168724.png'
-    },
-    {
-      chatId: 3,
-      title: 'Fulano de tal',
-      image: 'https://image.flaticon.com/icons/png/128/168/168724.png'
-    },
-    {
-      chatId: 4,
-      title: 'Fulano de tal',
-      image: 'https://image.flaticon.com/icons/png/128/168/168724.png'
-    },
-
-  ]);
+  const [chatlist, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState({}); //Verifica se tem um chat ativo ou não
+
+  // Como deixar um usuário previamente cadastrado como abertura default:
+  //  Muda o estado de null para algum usuário
+  const [user, setUser] = useState(null);
+
+  
+
+  const [showNewChat, setShowNewChat] = useState(false);
+
+  useEffect( () => {
+    if(user !== null){
+      let unsub = Api.onChatList(user.id, setChatList);
+      return unsub;
+    }
+  }, [user]);
+
+  const handleNewChat = () => {
+    setShowNewChat(true);
+  }
+
+  const handleLoginData = async (u) => {
+    let newUser = {
+      id: u.uid,
+      name: u.displayName,
+      avatar: u.photoURL
+    };
+    await Api.addUser(newUser);
+    // Adicionar o cara no banco de dados
+    setUser(newUser);
+  }
+
+  if (user === null){
+    console.log(user);
+    return (<Login onReceive={handleLoginData}/>);
+  }
+
 
 
   return (
     <div className="app-window">
       <div className="sidebar">
+        <NewChat
+          chatlist={chatlist}
+          user={user}
+          show={showNewChat}
+          setShow={setShowNewChat}
+        
+        />
         <header>
           
-          <img className="header--avatar" src="https://image.flaticon.com/icons/png/128/168/168724.png" alt=""></img>
+          <img className="header--avatar" src={user.avatar} alt=""></img>
           
           <div className="header--buttons">
             <div className="header--btn">
               <DonutLargeIcon fontSize="large" style={{color: '#919191'}} />
+            </div>
+            <div
+              onClick={handleNewChat}
+              className="header--btn">
               <ChatIcon fontSize="large" style={{color: '#919191'}} />
+            </div>
+            <div className="header--btn">
               <MoreVertIcon fontSize="large" style={{color: '#919191'}} />
             </div>
+
           </div> 
         </header>
         <div className="search">
@@ -74,7 +105,10 @@ export default () => {
       <div className="contentarea">
         {
           activeChat.chatId !== undefined &&
-            <ChatWindow />
+            <ChatWindow
+              user={user}
+              data={activeChat}
+            />
         }
         {
           activeChat.chatId === undefined &&
